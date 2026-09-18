@@ -1,0 +1,27 @@
+name: fetch-images
+
+on:
+  workflow_dispatch:
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar imágenes Docker
+        run: |
+          docker pull grafana/loki:3.5.1
+          docker pull grafana/alloy:v1.10.0
+
+      - name: Guardar imágenes
+        run: |
+          docker save -o loki_3.5.1.tar grafana/loki:3.5.1
+          docker save -o alloy_v1.10.0.tar grafana/alloy:v1.10.0
+
+      - name: Subir archivos TAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-images
+          path: |
+            loki_3.5.1.tar
+            alloy_v1.10.0.tar
